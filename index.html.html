@@ -1,0 +1,533 @@
+
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Etel Upgrade & Crafting Calculator [GAMING DARK MODE]</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        body {
+            background-color: #0b0f19;
+            color: #e2e8f0;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background-image: radial-gradient(circle at 50% 50%, #151d30 0%, #0b0f19 100%);
+        }
+        .container {
+            max-width: 1100px;
+            width: 100%;
+            background: #111827;
+            padding: 25px;
+            border-radius: 16px;
+            border: 1px solid #1f2937;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            margin-bottom: 30px;
+        }
+        
+        /* Typography */
+        h1.main-title {
+            text-align: center;
+            color: #38bdf8;
+            font-size: 26px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 25px;
+            text-shadow: 0 0 10px rgba(56, 189, 248, 0.3);
+        }
+        h2 {
+            color: #38bdf8;
+            margin-top: 0;
+            padding-bottom: 10px;
+            font-size: 18px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .title-bar-refine {
+            border-bottom: 2px solid #f59e0b;
+            color: #f59e0b;
+        }
+        .title-bar-calc {
+            border-bottom: 2px solid #10b981;
+            color: #10b981;
+        }
+
+        .instruction {
+            background-color: #1e293b;
+            border-left: 4px solid #38bdf8;
+            padding: 14px;
+            margin-bottom: 20px;
+            border-radius: 6px;
+            font-size: 13.5px;
+            color: #94a3b8;
+            line-height: 1.5;
+        }
+        .instruction strong {
+            color: #f8fafc;
+        }
+        
+        /* Table Styles */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+            font-size: 13px;
+            margin-bottom: 25px;
+            background-color: #1f2937;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        th {
+            background-color: #111827;
+            color: #94a3b8;
+            text-align: center;
+            padding: 12px 6px;
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 12px;
+            letter-spacing: 0.5px;
+            border: 1px solid #374151;
+        }
+        th.refine-head {
+            color: #f59e0b;
+            background-color: #181510;
+            border-bottom: 2px solid #f59e0b;
+        }
+        th.calc-head {
+            color: #10b981;
+            background-color: #0f1715;
+            border-bottom: 2px solid #10b981;
+        }
+        td {
+            padding: 10px 6px;
+            border: 1px solid #374151;
+            text-align: center;
+            vertical-align: middle;
+            color: #e2e8f0;
+        }
+        tr:nth-child(even) {
+            background-color: #1b2330;
+        }
+        tr:hover {
+            background-color: #242f41;
+        }
+        
+        td.item-name {
+            text-align: left;
+            font-weight: bold;
+            color: #f1f5f9;
+            padding-left: 12px;
+        }
+        
+        /* Custom row backgrounds for grading tiers */
+        .tier-d { background-color: rgba(245, 158, 11, 0.04); }
+        .tier-c { background-color: rgba(239, 68, 68, 0.04); }
+        .tier-b { background-color: rgba(168, 85, 247, 0.04); }
+        .tier-a { background-color: rgba(249, 115, 22, 0.04); }
+
+        .status-danger {
+            background-color: rgba(220, 38, 38, 0.15);
+            color: #f87171;
+            font-weight: bold;
+            border: 1px solid rgba(220, 38, 38, 0.3);
+            border-radius: 4px;
+            padding: 2px 6px;
+            display: inline-block;
+        }
+        .status-safe {
+            background-color: rgba(16, 185, 129, 0.15);
+            color: #34d399;
+            font-weight: bold;
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            border-radius: 4px;
+            padding: 2px 6px;
+            display: inline-block;
+        }
+        
+        /* Interactive Inputs */
+        input[type="number"] {
+            width: 85px;
+            padding: 6px;
+            background-color: #0f172a;
+            border: 1px solid #475569;
+            border-radius: 6px;
+            text-align: center;
+            font-size: 14px;
+            font-weight: bold;
+            color: #10b981;
+            transition: all 0.2s;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.5);
+        }
+        input[type="number"]:focus {
+            border-color: #10b981;
+            outline: none;
+            background-color: #1e293b;
+            box-shadow: 0 0 8px rgba(16, 185, 129, 0.4);
+        }
+        
+        /* Summary Styling */
+        .total-row {
+            background-color: #064e3b !important;
+            font-weight: bold;
+        }
+        .total-row td {
+            border-top: 2px solid #10b981;
+            border-bottom: 2px solid #10b981;
+            color: #34d399;
+        }
+        .zeny-cell {
+            font-weight: bold;
+            color: #fb923c;
+        }
+        .empty-val {
+            color: #4b5563;
+        }
+        
+        /* Buttons */
+        .reset-btn {
+            background: linear-gradient(135deg, #dc2626 0%, #991b1b 100%);
+            color: white;
+            border: 1px solid #ef4444;
+            padding: 8px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 13px;
+            transition: all 0.2s;
+            box-shadow: 0 2px 6px rgba(220, 38, 38, 0.3);
+        }
+        .reset-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(220, 38, 38, 0.5);
+            background: linear-gradient(135deg, #ef4444 0%, #b91c1c 100%);
+        }
+        .flex-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            margin-top: 10px;
+        }
+        
+        .footer {
+            margin-top: 10px;
+            font-size: 11px;
+            color: #64748b;
+            text-align: center;
+            letter-spacing: 0.5px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1 class="main-title">⚔️ Ragnarok Online - Etel System Hub ⚔️</h1>
+    
+    <h2 class="title-bar-refine">📊 ข้อมูลระบบอัปเกรดเกรดยุทโธปกรณ์ (Grade Refine Information)</h2>
+    <table>
+        <thead>
+            <tr>
+                <th class="refine-head" style="width: 15%;">ระดับเกรด</th>
+                <th class="refine-head" style="width: 10%;">ระดับ Refine</th>
+                <th class="refine-head" style="width: 22%;">วัตถุดิบที่ใช้ต่อการตี</th>
+                <th class="refine-head" style="width: 15%;">ค่าใช้จ่าย (Zeny)</th>
+                <th class="refine-head" style="width: 15%;">บทลงโทษเมื่อล้มเหลว</th>
+                <th class="refine-head" style="width: 10%;">โอกาสสำเร็จ</th>
+                <th class="refine-head" style="width: 13%;">ไอเทมเพิ่มโอกาส +1%</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr class="tier-d">
+                <td rowspan="6" style="font-weight: bold; color: #f59e0b;">No Grade<br>➔<br>Grade D</td>
+                <td rowspan="2" style="font-weight: bold; color: #f1f5f9;">+9</td>
+                <td>Etel Aquamarine / 1ea</td>
+                <td>100,000 Z</td>
+                <td><span class="status-danger">ไอเทมแตกสลาย</span></td>
+                <td rowspan="2" style="font-weight: bold; font-size: 14px; color: #f59e0b;">10%</td>
+                <td rowspan="6" style="color: #cbd5e1; font-weight: 500; background-color: rgba(245, 158, 11, 0.02);">Blessed Etel Dust 1ea</td>
+            </tr>
+            <tr class="tier-d">
+                <td>Etel Aquamarine / 5ea</td>
+                <td>500,000 Z</td>
+                <td><span class="status-safe">ไอเทมปลอดภัย</span></td>
+            </tr>
+            <tr class="tier-d">
+                <td rowspan="2" style="font-weight: bold; color: #f1f5f9;">+10</td>
+                <td>Etel Aquamarine / 1ea</td>
+                <td>100,000 Z</td>
+                <td><span class="status-danger">ไอเทมแตกสลาย</span></td>
+                <td rowspan="2" style="font-weight: bold; font-size: 14px; color: #f59e0b;">20%</td>
+            </tr>
+            <tr class="tier-d">
+                <td>Etel Aquamarine / 5ea</td>
+                <td>500,000 Z</td>
+                <td><span class="status-safe">ไอเทมปลอดภัย</span></td>
+            </tr>
+            <tr class="tier-d">
+                <td rowspan="2" style="font-weight: bold; color: #f1f5f9;">+11</td>
+                <td>Etel Aquamarine / 1ea</td>
+                <td>100,000 Z</td>
+                <td><span class="status-danger">ไอเทมแตกสลาย</span></td>
+                <td rowspan="2" style="font-weight: bold; font-size: 14px; color: #34d399;">70%</td>
+            </tr>
+            <tr class="tier-d">
+                <td>Etel Aquamarine / 5ea</td>
+                <td>500,000 Z</td>
+                <td><span class="status-safe">ไอเทมปลอดภัย</span></td>
+            </tr>
+
+            <tr class="tier-c">
+                <td rowspan="4" style="font-weight: bold; color: #ef4444;">Grade D<br>➔<br>Grade C</td>
+                <td rowspan="2" style="font-weight: bold; color: #f1f5f9;">+10</td>
+                <td>Etel Topaz / 1ea</td>
+                <td>125,000 Z</td>
+                <td><span class="status-danger">ไอเทมแตกสลาย</span></td>
+                <td rowspan="2" style="font-weight: bold; font-size: 14px; color: #f59e0b;">20%</td>
+                <td rowspan="4" style="color: #cbd5e1; font-weight: 500; background-color: rgba(239, 68, 68, 0.02);">Blessed Etel Dust 3ea</td>
+            </tr>
+            <tr class="tier-c">
+                <td>Etel Topaz / 5ea</td>
+                <td>625,000 Z</td>
+                <td><span class="status-safe">ไอเทมปลอดภัย</span></td>
+            </tr>
+            <tr class="tier-c">
+                <td rowspan="2" style="font-weight: bold; color: #f1f5f9;">+11</td>
+                <td>Etel Topaz / 1ea</td>
+                <td>125,000 Z</td>
+                <td><span class="status-danger">ไอเทมแตกสลาย</span></td>
+                <td rowspan="2" style="font-weight: bold; font-size: 14px; color: #34d399;">60%</td>
+            </tr>
+            <tr class="tier-c">
+                <td>Etel Topaz / 5ea</td>
+                <td>625,000 Z</td>
+                <td><span class="status-safe">ไอเทมปลอดภัย</span></td>
+            </tr>
+
+            <tr class="tier-b">
+                <td rowspan="2" style="font-weight: bold; color: #a855f7;">Grade C<br>➔<br>Grade B</td>
+                <td rowspan="2" style="font-weight: bold; color: #f1f5f9;">+11</td>
+                <td>Etel Amethyst / 1ea</td>
+                <td>200,000 Z</td>
+                <td><span class="status-danger">ไอเทมแตกสลาย</span></td>
+                <td rowspan="2" style="font-weight: bold; font-size: 14px; color: #34d399;">50%</td>
+                <td rowspan="2" style="color: #cbd5e1; font-weight: 500; background-color: rgba(168, 85, 247, 0.02);">Blessed Etel Dust 5ea</td>
+            </tr>
+            <tr class="tier-b">
+                <td>Etel Amethyst / 5ea</td>
+                <td>1,000,000 Z</td>
+                <td><span class="status-safe">ไอเทมปลอดภัย</span></td>
+            </tr>
+
+            <tr class="tier-a">
+                <td rowspan="2" style="font-weight: bold; color: #f97316;">Grade B<br>➔<br>Grade A</td>
+                <td rowspan="2" style="font-weight: bold; color: #f1f5f9;">+11</td>
+                <td>Etel Amber / 2ea</td>
+                <td>500,000 Z</td>
+                <td><span class="status-danger">ไอเทมแตกสลาย</span></td>
+                <td rowspan="2" style="font-weight: bold; font-size: 14px; color: #f59e0b;">40%</td>
+                <td rowspan="2" style="color: #cbd5e1; font-weight: 500; background-color: rgba(249, 115, 22, 0.02);">Blessed Etel Dust 7ea</td>
+            </tr>
+            <tr class="tier-a">
+                <td>Etel Amber / 10ea</td>
+                <td>2,500,000 Z</td>
+                <td><span class="status-safe">ไอเทมปลอดภัย</span></td>
+            </tr>
+        </tbody>
+    </table>
+
+
+    <div class="flex-header">
+        <h2 class="title-bar-calc">🧮 เครื่องคำนวณวัตถุดิบแลกเปลี่ยน (Etel Exchange Calculator)</h2>
+        <button class="reset-btn" onclick="resetForm()">RESET COUNTER</button>
+    </div>
+    
+    <div class="instruction" style="margin-top: 15px;">
+        💡 <strong>คำแนะนำเกรดเดอร์:</strong> กรอกจำนวนชิ้นของไอเทมผลลัพธ์ที่ต้องการลงในช่อง <strong>"จำนวนที่ต้องการ"</strong> ระบบจะรันการคำนวณจำนวนวัตถุดิบดิบที่ต้องใช้ พร้อมสรุปเม็ดเงิน Zeny ทั้งหมดรวมให้ที่แถบสีเขียวท้ายตารางแบบ Real-time
+    </div>
+
+    <table>
+        <thead>
+            <tr>
+                <th class="calc-head" style="width: 22%; text-align: left; padding-left: 12px;">ไอเทมผลลัพธ์</th>
+                <th class="calc-head" style="width: 12%;">จำนวนที่ต้องการ</th>
+                <th class="calc-head" style="width: 11%;">Etel Dust</th>
+                <th class="calc-head" style="width: 11%;">Etel Stone</th>
+                <th class="calc-head" style="width: 8%;">BSB</th>
+                <th class="calc-head" style="width: 8%;">Aquamarine</th>
+                <th class="calc-head" style="width: 8%;">Topaz</th>
+                <th class="calc-head" style="width: 8%;">Amethyst</th>
+                <th class="calc-head" style="width: 8%;">Amber</th>
+                <th class="calc-head" style="width: 14%;">เงินที่ต้องใช้ (z)</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr data-item="etel_stone">
+                <td class="item-name" style="color: #60a5fa;">⚡ Etel Stone</td>
+                <td><input type="number" min="0" value="0" oninput="calculate()"></td>
+                <td class="dust-req">0</td>
+                <td class="stone-req empty-val">-</td>
+                <td class="bsb-req empty-val">-</td>
+                <td class="aqua-req empty-val">-</td>
+                <td class="topaz-req empty-val">-</td>
+                <td class="ame-req empty-val">-</td>
+                <td class="amber-req empty-val">-</td>
+                <td class="zeny-req zeny-cell">0</td>
+            </tr>
+            <tr data-item="blessed_dust">
+                <td class="item-name" style="color: #f43f5e;">✨ Blessed Etel Dust</td>
+                <td><input type="number" min="0" value="0" oninput="calculate()"></td>
+                <td class="dust-req">0</td>
+                <td class="stone-req empty-val">-</td>
+                <td class="bsb-req">0</td>
+                <td class="aqua-req empty-val">-</td>
+                <td class="topaz-req empty-val">-</td>
+                <td class="ame-req empty-val">-</td>
+                <td class="amber-req empty-val">-</td>
+                <td class="zeny-req zeny-cell">0</td>
+            </tr>
+            <tr data-item="etel_aqua">
+                <td class="item-name" style="color: #38bdf8;">💧 Etel Aquamarine</td>
+                <td><input type="number" min="0" value="0" oninput="calculate()"></td>
+                <td class="dust-req empty-val">-</td>
+                <td class="stone-req">0</td>
+                <td class="bsb-req empty-val">-</td>
+                <td class="aqua-req">0</td>
+                <td class="topaz-req empty-val">-</td>
+                <td class="ame-req empty-val">-</td>
+                <td class="amber-req empty-val">-</td>
+                <td class="zeny-req zeny-cell">0</td>
+            </tr>
+            <tr data-item="etel_topaz">
+                <td class="item-name" style="color: #fbbf24;">🟡 Etel Topaz</td>
+                <td><input type="number" min="0" value="0" oninput="calculate()"></td>
+                <td class="dust-req empty-val">-</td>
+                <td class="stone-req">0</td>
+                <td class="bsb-req empty-val">-</td>
+                <td class="aqua-req empty-val">-</td>
+                <td class="topaz-req">0</td>
+                <td class="ame-req empty-val">-</td>
+                <td class="amber-req empty-val">-</td>
+                <td class="zeny-req zeny-cell">0</td>
+            </tr>
+            <tr data-item="etel_ame">
+                <td class="item-name" style="color: #c084fc;">🟣 Etel Amethyst</td>
+                <td><input type="number" min="0" value="0" oninput="calculate()"></td>
+                <td class="dust-req empty-val">-</td>
+                <td class="stone-req">0</td>
+                <td class="bsb-req empty-val">-</td>
+                <td class="aqua-req empty-val">-</td>
+                <td class="topaz-req empty-val">-</td>
+                <td class="ame-req">0</td>
+                <td class="amber-req empty-val">-</td>
+                <td class="zeny-req zeny-cell">0</td>
+            </tr>
+            <tr data-item="etel_amber">
+                <td class="item-name" style="color: #fb923c;">🟠 Etel Amber</td>
+                <td><input type="number" min="0" value="0" oninput="calculate()"></td>
+                <td class="dust-req empty-val">-</td>
+                <td class="stone-req">0</td>
+                <td class="bsb-req empty-val">-</td>
+                <td class="aqua-req empty-val">-</td>
+                <td class="topaz-req empty-val">-</td>
+                <td class="ame-req empty-val">-</td>
+                <td class="amber-req">0</td>
+                <td class="zeny-req zeny-cell">0</td>
+            </tr>
+            <tr class="total-row">
+                <td style="text-align: left; padding-left: 12px; color: #ffffff;">📊 รวมทรัพยากรที่ต้องใช้ทั้งหมด</td>
+                <td id="total-qty" style="color: #ffffff;">-</td>
+                <td id="total-dust">0</td>
+                <td id="total-stone">0</td>
+                <td id="total-bsb">0</td>
+                <td id="total-aqua">0</td>
+                <td id="total-topaz">0</td>
+                <td id="total-ame">0</td>
+                <td id="total-amber">0</td>
+                <td id="total-zeny" style="color: #f97316; font-size: 15px;">0 z</td>
+            </tr>
+        </tbody>
+    </table>
+    
+    <div class="footer">
+        RO - Etel Premium Dashboard Layout • Optimized for Gamers
+    </div>
+</div>
+
+<script>
+    function calculate() {
+        // Recipes definitions: [dust, stone, bsb, aqua, topaz, ame, amber, zeny]
+        const recipes = {
+            etel_stone:   [5, 0, 0, 0, 0, 0, 0, 100000],
+            blessed_dust: [5, 0, 1, 0, 0, 0, 0, 100000],
+            etel_aqua:    [0, 3, 0, 1, 0, 0, 0, 100000],
+            etel_topaz:   [0, 6, 0, 0, 1, 0, 0, 200000],
+            etel_ame:     [0, 10, 0, 0, 0, 1, 0, 300000],
+            etel_amber:   [0, 15, 0, 0, 0, 0, 1, 500000]
+        };
+
+        let totals = { dust: 0, stone: 0, bsb: 0, aqua: 0, topaz: 0, ame: 0, amber: 0, zeny: 0 };
+        
+        for (let key in recipes) {
+            const row = document.querySelector(`tr[data-item="${key}"]`);
+            const qtyInput = row.querySelector('input[type="number"]');
+            let qty = parseInt(qtyInput.value) || 0;
+            if (qty < 0) { qty = 0; qtyInput.value = 0; }
+
+            const recipe = recipes[key];
+            
+            let rowDust = recipe[0] * qty;
+            let rowStone = recipe[1] * qty;
+            let rowBsb = recipe[2] * qty;
+            let rowAqua = recipe[3] * qty;
+            let rowTopaz = recipe[4] * qty;
+            let rowAme = recipe[5] * qty;
+            let rowAmber = recipe[6] * qty;
+            let rowZeny = recipe[7] * qty;
+
+            if(recipe[0] > 0) row.querySelector('.dust-req').innerText = rowDust.toLocaleString();
+            if(recipe[1] > 0) row.querySelector('.stone-req').innerText = rowStone.toLocaleString();
+            if(recipe[2] > 0) row.querySelector('.bsb-req').innerText = rowBsb.toLocaleString();
+            if(recipe[3] > 0) row.querySelector('.aqua-req').innerText = rowAqua.toLocaleString();
+            if(recipe[4] > 0) row.querySelector('.topaz-req').innerText = rowTopaz.toLocaleString();
+            if(recipe[5] > 0) row.querySelector('.ame-req').innerText = rowAme.toLocaleString();
+            if(recipe[6] > 0) row.querySelector('.amber-req').innerText = rowAmber.toLocaleString();
+            row.querySelector('.zeny-req').innerText = rowZeny.toLocaleString();
+
+            totals.dust += rowDust;
+            totals.stone += rowStone;
+            totals.bsb += rowBsb;
+            totals.aqua += rowAqua;
+            totals.topaz += rowTopaz;
+            totals.ame += rowAme;
+            totals.amber += rowAmber;
+            totals.zeny += rowZeny;
+        }
+
+        document.getElementById('total-dust').innerText = totals.dust.toLocaleString();
+        document.getElementById('total-stone').innerText = totals.stone.toLocaleString();
+        document.getElementById('total-bsb').innerText = totals.bsb.toLocaleString();
+        document.getElementById('total-aqua').innerText = totals.aqua.toLocaleString();
+        document.getElementById('total-topaz').innerText = totals.topaz.toLocaleString();
+        document.getElementById('total-ame').innerText = totals.ame.toLocaleString();
+        document.getElementById('total-amber').innerText = totals.amber.toLocaleString();
+        document.getElementById('total-zeny').innerText = totals.zeny.toLocaleString() + ' z';
+    }
+
+    function resetForm() {
+        const inputs = document.querySelectorAll('input[type="number"]');
+        inputs.forEach(input => input.value = 0);
+        calculate();
+    }
+</script>
+
+</body>
+</html>
